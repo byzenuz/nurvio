@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { number: string } }
+  { params }: { params: Promise<{ number: string }> }
 ) {
   try {
-    const { number } = params
+    const { number } = await params
     const searchParams = request.nextUrl.searchParams
     const editions = searchParams.get('editions') || 'quran-uthmani,quran-uzbek'
 

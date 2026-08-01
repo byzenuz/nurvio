@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server'
 import { UMAH_API_BASE, UMAH_API_KEY } from '@/config/api'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   request: Request,
-  { params }: { params: { category: string } }
+  { params }: { params: Promise<{ category: string }> }
 ) {
   try {
-    const { category } = params
+    const { category } = await params
     const response = await fetch(`${UMAH_API_BASE}/api/duas/category/${category}?apikey=${UMAH_API_KEY}`, {
       headers: {
         'Accept': 'application/json',
