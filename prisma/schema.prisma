@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Surah {
+  id          Int     @id @default(autoincrement())
+  number      Int     @unique
+  name        String
+  englishName String
+  translation String
+  ayahs       Ayah[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Ayah {
+  id          Int     @id @default(autoincrement())
+  surahId     Int
+  number      Int
+  text        String
+  translation String?
+  surah       Surah   @relation(fields: [surahId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([surahId])
+}
+
+model DuaCategory {
+  id        Int    @id @default(autoincrement())
+  name      String @unique
+  icon      String
+  duas      Dua[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dua {
+  id         Int         @id @default(autoincrement())
+  categoryId Int
+  arabic     String
+  transliteration String
+  translation String
+  reference  String
+  category   DuaCategory @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+model City {
+  id        Int    @id @default(autoincrement())
+  name      String @unique
+  country   String
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String?
+  bookmarks    String[]
+  lastReadSurah Int?
+  quranProgress Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
